@@ -18,7 +18,6 @@
 		86B96F41250E9F04000428F6 /* EntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B96F3D250E9F04000428F6 /* EntryView.swift */; };
 		86B96F42250E9F04000428F6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B96F3E250E9F04000428F6 /* ContentView.swift */; };
 		86B96F47250E9F2B000428F6 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B96F45250E9F2B000428F6 /* DataManager.swift */; };
-		86B96F48250E9F2B000428F6 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B96F46250E9F2B000428F6 /* Person.swift */; };
 		86B96F4B250E9F7A000428F6 /* Peep+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B96F49250E9F7A000428F6 /* Peep+CoreDataClass.swift */; };
 		86B96F4C250E9F7A000428F6 /* Peep+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B96F4A250E9F7A000428F6 /* Peep+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
@@ -37,7 +36,6 @@
 		86B96F3D250E9F04000428F6 /* EntryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntryView.swift; sourceTree = "<group>"; };
 		86B96F3E250E9F04000428F6 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		86B96F45250E9F2B000428F6 /* DataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
-		86B96F46250E9F2B000428F6 /* Person.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
 		86B96F49250E9F7A000428F6 /* Peep+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Peep+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		86B96F4A250E9F7A000428F6 /* Peep+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Peep+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -109,7 +107,6 @@
 				86B96F49250E9F7A000428F6 /* Peep+CoreDataClass.swift */,
 				86B96F4A250E9F7A000428F6 /* Peep+CoreDataProperties.swift */,
 				86B96F45250E9F2B000428F6 /* DataManager.swift */,
-				86B96F46250E9F2B000428F6 /* Person.swift */,
 				86B96F28250E9EE6000428F6 /* Hello_.xcdatamodeld */,
 			);
 			path = Model;
@@ -193,7 +190,6 @@
 				86B96F42250E9F04000428F6 /* ContentView.swift in Sources */,
 				86B96F2A250E9EE6000428F6 /* Hello_.xcdatamodeld in Sources */,
 				86B96F40250E9F04000428F6 /* DetailView.swift in Sources */,
-				86B96F48250E9F2B000428F6 /* Person.swift in Sources */,
 				86B96F4B250E9F7A000428F6 /* Peep+CoreDataClass.swift in Sources */,
 				86B96F27250E9EE6000428F6 /* SceneDelegate.swift in Sources */,
 				86B96F41250E9F04000428F6 /* EntryView.swift in Sources */,

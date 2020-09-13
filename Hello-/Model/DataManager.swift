@@ -8,32 +8,15 @@
 
 import UIKit
 import SwiftUI
+import CoreData
 
 class DataManager {
-    //Test data only for now
-    func getPeople() -> [Person] {
-        var tempPeople: [Person] = []
-        for _ in 1...20 {
-            tempPeople.append(Person(id: UUID()))
-        }
-        return tempPeople
-    }
     
-    func getPeopleFromDirectory() -> [Person] {
-        var people = [Person]()
-        if let files = try? FileManager.default.contentsOfDirectory(at: getDocumentsDirectory(), includingPropertiesForKeys: nil) {
-            for file in files {
-                if let id = UUID(uuidString: file.lastPathComponent) {
-                    people.append(Person(id: id))
-                }
-            }
-        }
-        print("People Found: \(people)")
-        return people
-    }
-    
-    func loadData(for id: UUID) -> Image {
-        let filename = getDocumentsDirectory().appendingPathComponent(id.description)
+    func loadImage(for person: Peep) -> Image {
+        
+        guard let personId = person.id else { return Image(systemName: "xmark.octagon") }
+        
+        let filename = getDocumentsDirectory().appendingPathComponent(personId.description)
         
         do {
             let data = try Data(contentsOf: filename)
@@ -47,14 +30,21 @@ class DataManager {
         return Image(systemName: "xmark.octagon")
     }
     
-    func saveImage(_ image: UIImage, withId id: UUID) {
+    func save(_ image: UIImage, name: String, in context: NSManagedObjectContext) {
         
-        let fileURL = getDocumentsDirectory().appendingPathComponent(id.description)
+        let person = Peep(context: context)
+        person.id = UUID()
+        person.name = name
+        
+        if context.hasChanges {
+            try? context.save()
+        }
+        
+        let fileURL = getDocumentsDirectory().appendingPathComponent(person.wrappedId)
         
         if let jpegData = image.jpegData(compressionQuality: 0.8) {
             do {
                 try jpegData.write(to: fileURL, options: [.atomicWrite, .completeFileProtection])
-                print("Image Saved!!!")
             } catch {
                 print("Unable to save photo.")
             }

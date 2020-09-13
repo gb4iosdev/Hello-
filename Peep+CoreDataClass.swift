@@ -11,6 +11,6 @@ import Foundation
 import CoreData
 
 @objc(Peep)
-public class Peep: NSManagedObject {
+public class Peep: NSManagedObject, Identifiable {
 
 }

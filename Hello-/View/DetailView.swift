@@ -11,19 +11,21 @@ import SwiftUI
 struct DetailView: View {
     
     
-    let personId: UUID
+    let person: Peep
     
     let dataManager = DataManager()
     
     private var image: Image {
-        dataManager.loadData(for: personId)
+        dataManager.loadImage(for: person)
     }
-    
-    @State var showImagePicker = false
     
     var body: some View {
         VStack {
-            Text("Name: \(dataManager.nameForPerson(with: personId) ?? "Unknown")")
+            HStack {
+                Text("Name:  ")
+                    .font(.headline)
+                Text(person.wrappedName)
+            }
             ZStack {
                 image
                     .resizable()
@@ -38,6 +40,7 @@ struct DetailView: View {
 
 struct DetailView_Previews: PreviewProvider {
     static var previews: some View {
-        DetailView(personId: UUID())
+        let person = FetchRequest<Peep>(entity: Peep.entity(), sortDescriptors: []).wrappedValue.first!
+        return DetailView(person: person)
     }
 }

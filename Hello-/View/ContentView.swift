@@ -10,18 +10,22 @@ import SwiftUI
 
 struct ContentView: View {
     
+    @Environment(\.managedObjectContext) var context
+    @FetchRequest(entity: Peep.entity(), sortDescriptors: [NSSortDescriptor(key: "name", ascending: true)]) var peeps: FetchedResults<Peep>
+    
     @State private var showDetail = false
     
     let dataManager = DataManager()
-    var peeps: [Person] {
-        dataManager.getPeopleFromDirectory()
-    }
     
     var body: some View {
         NavigationView {
             List(peeps) { person in
-                NavigationLink(destination: DetailView(personId: person.id)) {
-                    Text("\(person.name)")
+                NavigationLink(destination: DetailView(person: person)) {
+                    self.dataManager.loadImage(for: person)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 44, height: 44)
+                    Text("\(person.wrappedName)")
                 }
             }
             .navigationBarTitle("People", displayMode: .inline)
@@ -36,7 +40,7 @@ struct ContentView: View {
             )
         }
         .sheet(isPresented: $showDetail) {
-            EntryView(personId: UUID())
+            EntryView(context: self.context)
         }
     }
 }

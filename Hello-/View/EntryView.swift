@@ -8,6 +8,7 @@
 
 import SwiftUI
 import CoreGraphics
+import CoreData
 
 struct EntryView: View {
     
@@ -16,7 +17,8 @@ struct EntryView: View {
     @State private var enteredName: String = ""
     @State private var dataInvalid = false
     @State private var dataInvalidMessage = ""
-    let personId: UUID
+    
+    let context: NSManagedObjectContext
     @Environment(\.presentationMode) var presentationMode
     
     let dataManager = DataManager()
@@ -25,14 +27,25 @@ struct EntryView: View {
     
     var body: some View {
         VStack {
+            VStack(alignment: .leading) {
+                Text("Enter Name:")
+                    .padding()
+                TextField("Name:", text: $enteredName)
+                .padding()
+            }
+            
+            Spacer()
+            
             ZStack {
                 Rectangle()
                     .fill(image == nil ? Color.secondary : Color.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
                 
                 if image != nil {
                     image?
                     .resizable()
                     .scaledToFit()
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
                 } else {
                     Text("Tap to select a picture")
                         .foregroundColor(.white)
@@ -47,14 +60,6 @@ struct EntryView: View {
             
             Spacer()
             
-            VStack(alignment: .leading) {
-                Text("Person Id: \(self.personId.description)")
-                Text("Enter Name:")
-                TextField("Name:", text: $enteredName)
-            }
-            
-            Spacer()
-            
             HStack {
                 Button("Cancel") {
                     self.presentationMode.wrappedValue.dismiss()
@@ -62,10 +67,11 @@ struct EntryView: View {
                 .padding()
                 Spacer()
                 Button("Save") {
-                    self.saveImage(withId: self.personId)
+                    self.save()
                 }
                 .padding()
             }
+            
         }
         .sheet(isPresented: $showImagePicker, onDismiss: loadImage) {
             ImagePicker(image: self.$inputImage)
@@ -80,7 +86,8 @@ struct EntryView: View {
                 image = Image(uiImage: inputImage)
     }
     
-    func saveImage(withId id: UUID) {
+    func save() {
+        
         guard let image = inputImage else {
             dataInvalidMessage = "Please select a photo"
             dataInvalid = true
@@ -91,12 +98,16 @@ struct EntryView: View {
             dataInvalid = true
             return
         }
-        dataManager.saveImage(image, withId: id)
+        
+        dataManager.save(image, name: self.enteredName, in: self.context)
+        
+        self.presentationMode.wrappedValue.dismiss()
     }
 }
 
 struct EntryView_Previews: PreviewProvider {
+    @Environment(\.managedObjectContext) static var context
     static var previews: some View {
-        DetailView(personId: UUID())
+        EntryView(context: context)
     }
 }
