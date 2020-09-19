@@ -17,11 +17,15 @@ struct EntryView: View {
     @State private var enteredName: String = ""
     @State private var dataInvalid = false
     @State private var dataInvalidMessage = ""
+    @State private var selectedPhotoPickerSourceType = 0
+    
+    let pickerSourceTypes: [UIImagePickerController.SourceType] = [.camera, .photoLibrary]
     
     let context: NSManagedObjectContext
     @Environment(\.presentationMode) var presentationMode
     
     let dataManager = DataManager()
+    @ObservedObject var locationFetcher = LocationFetcher()
     
     @State var showImagePicker = false
     
@@ -30,11 +34,10 @@ struct EntryView: View {
             VStack(alignment: .leading) {
                 Text("Enter Name:")
                     .padding()
+                    .font(.headline)
                 TextField("Name:", text: $enteredName)
                 .padding()
             }
-            
-            Spacer()
             
             ZStack {
                 Rectangle()
@@ -47,34 +50,77 @@ struct EntryView: View {
                     .scaledToFit()
                     .clipShape(RoundedRectangle(cornerRadius: 20))
                 } else {
-                    Text("Tap to select a picture")
+                    Text(pickerSourceTypes[selectedPhotoPickerSourceType].formattedMessage)
                         .foregroundColor(.white)
                         .font(.headline)
                 }
             }
             .padding(.horizontal, 5.0)
-            .padding(.vertical, 150.0)
+            .padding(.top, 20.0)
+            .padding(.bottom, 30.0)
             .onTapGesture {
                 self.showImagePicker = true
             }
             
-            Spacer()
+            Picker("Source Type", selection: $selectedPhotoPickerSourceType) {
+                ForEach(0..<pickerSourceTypes.count) {
+                    Text("\(self.pickerSourceTypes[$0].formattedSourceType)")
+                }
+            }
+            .pickerStyle(SegmentedPickerStyle())
+            .padding(.bottom, 50.0)
+            
+            VStack(alignment: .leading) {
+                HStack{
+                    Text("Latitude:  ")
+                        .font(.headline)
+                    Text(self.locationFetcher.lastKnownLatitude)
+                        .padding()
+                    Spacer()
+                }
+                HStack{
+                    Text("Longitude:")
+                        .font(.headline)
+                    Text(self.locationFetcher.lastKnownLongitude)
+                }
+            }
+            .padding(.bottom, 50.0)
             
             HStack {
-                Button("Cancel") {
+                Button(action: {
                     self.presentationMode.wrappedValue.dismiss()
+                }) {
+                    Text("Cancel")
+                    .padding(5)
+                        .font(.system(size: 22))
                 }
-                .padding()
+                .background(Color.black.opacity(0.85))
+                .foregroundColor(.white)
+                .font(.title)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .padding(.leading, 10.0)
+                
                 Spacer()
-                Button("Save") {
+                Button(action: {
                     self.save()
+                }) {
+                    Text("Save")
+                    .padding(5)
+                        .font(.system(size: 22))
                 }
-                .padding()
+                .background(Color.black.opacity(0.85))
+                .foregroundColor(.white)
+                .font(.title)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .padding(.trailing, 10.0)
             }
-            
+            .padding(.bottom, 25.0)
+        }
+        .onAppear {
+            self.locationFetcher.start()
         }
         .sheet(isPresented: $showImagePicker, onDismiss: loadImage) {
-            ImagePicker(image: self.$inputImage)
+            ImagePicker(image: self.$inputImage, sourceType: pickerSourceTypes[selectedPhotoPickerSourceType])
         }
         .alert(isPresented: $dataInvalid) {
             Alert(title: Text("Data Missing"), message: Text(dataInvalidMessage), dismissButton: .default(Text("OK")))
@@ -99,7 +145,7 @@ struct EntryView: View {
             return
         }
         
-        dataManager.save(image, name: self.enteredName, in: self.context)
+        dataManager.save(image, name: self.enteredName, coord: self.locationFetcher.lastKnownLocation, in: self.context)
         
         self.presentationMode.wrappedValue.dismiss()
     }

@@ -27,6 +27,8 @@ struct ImagePicker: UIViewControllerRepresentable {
     @Binding var image: UIImage?
     @Environment(\.presentationMode) var presentationMode
     
+    let sourceType: UIImagePickerController.SourceType
+    
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
@@ -34,6 +36,13 @@ struct ImagePicker: UIViewControllerRepresentable {
     func makeUIViewController(context: UIViewControllerRepresentableContext<ImagePicker>) -> UIImagePickerController {
         let picker = UIImagePickerController()
         picker.delegate = context.coordinator
+        #if targetEnvironment(simulator)
+            // Can only access photolibrary
+            picker.sourceType = .photoLibrary
+        #else
+            picker.sourceType = self.sourceType 
+        #endif
+        
         return picker
     }
     

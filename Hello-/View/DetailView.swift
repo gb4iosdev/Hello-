@@ -10,6 +10,7 @@ import SwiftUI
 
 struct DetailView: View {
     
+    @State private var showMapSheet = false
     
     let person: Peep
     
@@ -24,7 +25,9 @@ struct DetailView: View {
             HStack {
                 Text("Name:  ")
                     .font(.headline)
+                    .padding()
                 Text(person.wrappedName)
+                Spacer()
             }
             ZStack {
                 image
@@ -33,7 +36,26 @@ struct DetailView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 20))
             }
             .padding(.horizontal, 5.0)
-            .padding(.vertical, 150.0)
+            .padding(.vertical, 50.0)
+            
+            Button(action: {
+                self.showMapSheet = true
+            }) {
+                Text("Photo Location")
+                .padding(5)
+                    .font(.system(size: 22))
+            }
+            .background(Color.black.opacity(0.85))
+            .foregroundColor(.white)
+            .font(.title)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            
+            
+            Spacer()
+                        
+        }
+        .sheet(isPresented: $showMapSheet) {
+            MapSheet(centreCoordinate: person.coordinate)
         }
     }
 }

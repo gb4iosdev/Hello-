@@ -56,5 +56,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We would like to capture the location where you met each person</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Can we please use the camera?</string>
 </dict>
 </plist>

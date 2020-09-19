@@ -9,6 +9,7 @@
 import UIKit
 import SwiftUI
 import CoreData
+import CoreLocation
 
 class DataManager {
     
@@ -30,14 +31,19 @@ class DataManager {
         return Image(systemName: "xmark.octagon")
     }
     
-    func save(_ image: UIImage, name: String, in context: NSManagedObjectContext) {
+    func save(_ image: UIImage, name: String, coord: CLLocationCoordinate2D?, in context: NSManagedObjectContext) {
+        
+        let coordinate = coord ?? CLLocationCoordinate2D(latitude: 0, longitude: 0)
         
         let person = Peep(context: context)
         person.id = UUID()
         person.name = name
+        person.latCoordinate = Double(coordinate.latitude)
+        person.longCoordinate = Double(coordinate.longitude)
         
         if context.hasChanges {
             try? context.save()
+            print("Did the save")
         }
         
         let fileURL = getDocumentsDirectory().appendingPathComponent(person.wrappedId)
